@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+SQLAlchemy
+APScheduler
+pytz
+asyncpg
+Mangum
+selenium
+beautifulsoup4
