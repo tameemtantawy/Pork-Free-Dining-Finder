@@ -7,8 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import delete
 from database import SessionLocal, init_db
-from models import Food
+from models import Food, Food2
 from allowed_food import scrape_foods
+from allowed_food_JP import scrape_foodsJP
 import asyncio
 import pytz
 from mangum import Mangum
@@ -40,9 +41,21 @@ async def get_foods(db: AsyncSession = Depends(get_db)):
     logger.info(f"Retrieved foods: {foods}")
     return {"foods": foods}
 
+@app.get("/api/foodsJP")
+async def get_foods_jp(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Food2))
+    foods = result.scalars().all()
+    logger.info(f"Retrieved foods: {foods}")
+    return {"foods": foods}
+
 @app.post("/api/scrape")
 async def scrape_and_save_foods_endpoint(db: AsyncSession = Depends(get_db)):
     await scrape_and_save_foods(db)
+    return {"message": "Foods scraped and saved successfully"}
+
+@app.post("/api/scrapeJP")
+async def scrape_and_save_foods_jp_endpoint(db: AsyncSession = Depends(get_db)):
+    await scrape_and_save_foods_jp(db)
     return {"message": "Foods scraped and saved successfully"}
 
 async def scrape_and_save_foods(db: AsyncSession):
@@ -73,12 +86,51 @@ async def scrape_and_save_foods(db: AsyncSession):
         await db.rollback()
         logger.error(f"Failed to commit changes to the database: {e}")
 
+async def scrape_and_save_foods_jp(db: AsyncSession):
+    scraped_foods = scrape_foodsJP()  # Replace this with your actual scraping function for the new page
+    logger.info(f"Scraped foods for Food2: {scraped_foods}")
+
+    # Clear existing foods in Food2
+    await db.execute(delete(Food2))
+
+    # Use a set to keep track of unique food names
+    seen_food_names = set()
+
+    # Add new foods to Food2
+    for restaurant in scraped_foods:
+        for food in restaurant['foods']:
+            if food['food'] not in seen_food_names:
+                seen_food_names.add(food['food'])
+                db.add(Food2(
+                    restaurant_name=restaurant['restaurant'],
+                    name=food['food'],
+                    contains_pork=food['contains_pork']
+                ))
+
+    try:
+        await db.commit()
+        logger.info("Foods for Food2 saved successfully")
+    except IntegrityError as e:
+        await db.rollback()
+        logger.error(f"Failed to commit changes to the database (Food2): {e}")
+
+        
+
 async def scrape_and_save_foods_internal():
     async with SessionLocal() as session:
         await scrape_and_save_foods(session)
 
+async def scrape_and_save_foods_internal_jp():
+    async with SessionLocal() as session:
+        await scrape_and_save_foods_jp(session)
+
+
+
 def scrape_and_save_foods_sync():
     asyncio.run(scrape_and_save_foods_internal())
+
+def scrape_and_save_foods_jp_sync():
+    asyncio.run(scrape_and_save_foods_internal_jp())
 
 @app.on_event("startup")
 async def on_startup():
@@ -93,6 +145,12 @@ async def on_startup():
     scheduler.add_job(scrape_and_save_foods_sync, CronTrigger(day_of_week='mon-fri', hour=16, minute=31, timezone=eastern))
     scheduler.add_job(scrape_and_save_foods_sync, CronTrigger(day_of_week='sat-sun', hour=10, minute=1, timezone=eastern))
     scheduler.add_job(scrape_and_save_foods_sync, CronTrigger(day_of_week='sat-sun', hour=16, minute=31, timezone=eastern))
+
+    scheduler.add_job(scrape_and_save_foods_jp_sync, CronTrigger(day_of_week='mon-fri', hour=8, minute=0, timezone=eastern))
+    scheduler.add_job(scrape_and_save_foods_jp_sync, CronTrigger(day_of_week='mon-fri', hour=12, minute=0, timezone=eastern))
+    scheduler.add_job(scrape_and_save_foods_jp_sync, CronTrigger(day_of_week='sat-sun', hour=11, minute=0, timezone=eastern))
+    scheduler.add_job(scrape_and_save_foods_jp_sync, CronTrigger(day_of_week='sat-sun', hour=17, minute=0, timezone=eastern))
+
 
     # Start the scheduler
     scheduler.start()

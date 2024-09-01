@@ -20,7 +20,7 @@ def contains_pork(foods):
                 return True
     return False
 
-def scrape_foods():
+def scrape_foodsJP():
     # Path to your ChromeDriver executable
     chromedriver_path = '/Users/tameemtantawy/Desktop/chromedriver-mac-arm64/chromedriver'
 
@@ -31,7 +31,7 @@ def scrape_foods():
     driver = webdriver.Chrome(service=service)
 
     # Fetch the web page
-    driver.get("https://usf.campusdish.com/en/locationsandmenus/tampa/thehub/")
+    driver.get("https://usf.campusdish.com/LocationsAndMenus/Tampa/JuniperDining")
 
     # Wait for the page to fully load. Adjust time if necessary.
     WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, "p[data-testid='product-card-description']")))
@@ -43,7 +43,12 @@ def scrape_foods():
     soup = BeautifulSoup(page_to_scrape, "html.parser")
 
     # Find all restaurants
-    restaurants = soup.find_all("div", id=re.compile("^22"))
+    ids = ["10993", "13890", "10997", "10996", "13889", "10995"]
+    restaurants = []
+    for element_id in ids:
+        element = soup.find("div", id=element_id)
+        if element:
+            restaurants.append(element)
 
     foods_by_restaurant = []
 

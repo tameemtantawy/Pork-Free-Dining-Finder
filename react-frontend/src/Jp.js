@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './TheHub.css'; // Make sure you create this CSS file
+import './Jp.css'; // Make sure you create this CSS file
 
 
-function TheHub() {
+function Jp() {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/foods')
+    axios.get('http://127.0.0.1:8000/api/foodsJP')
       .then(response => {
         setFoods(response.data.foods);
         setLoading(false);
@@ -32,7 +32,7 @@ function TheHub() {
   }, {});
 
   const scrape = () => {
-    axios.post('http://127.0.0.1:8000/api/scrape', {})
+    axios.post('http://127.0.0.1:8000/api/scrapeJP', {})
       .then(response => {
         console.log('Scraping initiated successfully:', response.data);
       })
@@ -77,4 +77,4 @@ function TheHub() {
   );
 }
 
-export default TheHub;
+export default Jp;

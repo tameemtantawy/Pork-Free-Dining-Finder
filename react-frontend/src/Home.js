@@ -7,6 +7,7 @@ function Home() {
   return (
     <div className="App">
       <button onClick={() => navigate('/thehub')}>Go to The Hub</button>
+      <button onClick={() => navigate('/jp')}>Go to Juniper Hall</button>
     </div>
   );
 }
