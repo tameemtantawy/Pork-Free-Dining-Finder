@@ -1,0 +1,53 @@
+/* Style the container */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+    background-color: #f3f3f3; /* Subtle background for dining hall theme */
+    padding: 20px;
+  }
+  
+  /* General dining-button styles */
+  .dining-button {
+    width: 80%; /* Make the buttons take up most of the screen */
+    height: 20%; /* Set a large height */
+    font-size: 2rem; /* Make text big and bold */
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add a nice shadow */
+    font-family: 'Trebuchet MS', sans-serif; /* Modern, easy-to-read font */
+    background-size: cover;
+    color: white;
+  }
+  
+  /* Hub button specific styles */
+  .hub-button {
+    background-color: #ff7043; /* Warm dining-related color (like food trays) */
+    background-image: url('https://example.com/hub-bg.jpg'); /* Example dining hall image URL */
+    background-blend-mode: overlay;
+  }
+  
+  .hub-button:hover {
+    background-color: #e64a19; /* Darker hover effect */
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* JP button specific styles */
+  .jp-button {
+    background-color: #4caf50; /* Green for fresh dining theme */
+    background-image: url('https://example.com/jp-bg.jpg'); /* Example Juniper dining hall image */
+    background-blend-mode: overlay;
+  }
+  
+  .jp-button:hover {
+    background-color: #388e3c;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+  }
+  

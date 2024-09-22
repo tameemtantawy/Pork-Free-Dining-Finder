@@ -60,4 +60,21 @@
     border-bottom: none;
   }
 
+  .scrape-button {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 6px 6px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .scrape-button:hover {
+    background-color: #e0e0e0;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
   

@@ -44,8 +44,8 @@ function Jp() {
 
   return (
     <div className="App">
-      <h1>Foods List by Restaurant</h1>
-      <button onClick={scrape}>Start Scraping</button>
+      <h1>Juniper Dining Hall</h1>
+      <button className="scrape-button" onClick={scrape}>Start Scraping</button>
       {Object.keys(groupedFoods).map((restaurant, index) => (
         <div key={index} className="restaurant-section">
           <h2 className="restaurant-name">{restaurant}</h2>

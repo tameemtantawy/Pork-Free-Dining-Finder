@@ -43,7 +43,7 @@ def scrape_foods():
     soup = BeautifulSoup(page_to_scrape, "html.parser")
 
     # Find all restaurants
-    restaurants = soup.find_all("div", id=re.compile("^22"))
+    restaurants = soup.find_all("div", {"id": re.compile("^22"), "role": "group"})
 
     foods_by_restaurant = []
 
@@ -58,7 +58,7 @@ def scrape_foods():
 
         # Extract foods for this restaurant
         # food_items = restaurant.find_all("p", class_="sc-uVWWZ injihV ItemContent")
-        food_items = restaurant.find_all("p", class_=lambda x: x and "ItemContent" in x)
+        food_items = restaurant.find_all("p", class_ = "ItemContent")
 
         foods = [food.get_text().strip().lower() for food in food_items]
 

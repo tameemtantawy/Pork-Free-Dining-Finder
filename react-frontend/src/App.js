@@ -4,7 +4,6 @@ import Home from './Home';
 import TheHub from './TheHub';  // Ensure this path is correct
 import Jp from './Jp';  // Ensure this path is correct
 
-
 function App() {
   return (
     <Router>
