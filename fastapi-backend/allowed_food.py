@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -21,11 +22,24 @@ def contains_pork(foods):
     return False
 
 def scrape_foods():
-    # Path to your ChromeDriver executable
-    chromedriver_path = '/Users/tameemtantawy/Desktop/chromedriver-mac-arm64/chromedriver'
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Ensures Chrome runs in headless mode.
+    chrome_options.add_argument("--no-sandbox")  # Bypass OS security model.
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems.
 
+    # Heroku paths for ChromeDriver and Chrome binary
+    chrome_bin_path = '/app/.apt/usr/bin/google-chrome'
+    chrome_driver_path = '/app/.chromedriver/bin/chromedriver'
+
+    # Set binary location
+    chrome_options.binary_location = chrome_bin_path
     # Set up the ChromeDriver service
-    service = Service(chromedriver_path)
+    service = Service(chrome_driver_path)
+
+    # Set up the Selenium WebDriver with the correct path
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    # Set up the ChromeDriver service
+    service = Service(chrome_driver_path)
 
     # Set up the Selenium WebDriver with the correct path
     driver = webdriver.Chrome(service=service)

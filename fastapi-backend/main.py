@@ -12,7 +12,6 @@ from allowed_food import scrape_foods
 from allowed_food_JP import scrape_foodsJP
 import asyncio
 import pytz
-from mangum import Mangum
 from sqlalchemy.exc import IntegrityError
 
 # Configure logging
@@ -20,7 +19,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
-handler = Mangum(app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -135,27 +133,9 @@ def scrape_and_save_foods_jp_sync():
 @app.on_event("startup")
 async def on_startup():
     await init_db()
-    scheduler = BackgroundScheduler()
 
-    eastern = pytz.timezone('US/Eastern')
+    
 
-    # Schedule the scraper to run at the specified times (Eastern Time)
-    scheduler.add_job(scrape_and_save_foods_sync, CronTrigger(day_of_week='mon-fri', hour=7, minute=31, timezone=eastern))
-    scheduler.add_job(scrape_and_save_foods_sync, CronTrigger(day_of_week='mon-fri', hour=10, minute=31, timezone=eastern))
-    scheduler.add_job(scrape_and_save_foods_sync, CronTrigger(day_of_week='mon-fri', hour=16, minute=31, timezone=eastern))
-    scheduler.add_job(scrape_and_save_foods_sync, CronTrigger(day_of_week='sat-sun', hour=10, minute=1, timezone=eastern))
-    scheduler.add_job(scrape_and_save_foods_sync, CronTrigger(day_of_week='sat-sun', hour=16, minute=31, timezone=eastern))
-
-    scheduler.add_job(scrape_and_save_foods_jp_sync, CronTrigger(day_of_week='mon-fri', hour=8, minute=0, timezone=eastern))
-    scheduler.add_job(scrape_and_save_foods_jp_sync, CronTrigger(day_of_week='mon-fri', hour=12, minute=0, timezone=eastern))
-    scheduler.add_job(scrape_and_save_foods_jp_sync, CronTrigger(day_of_week='sat-sun', hour=11, minute=0, timezone=eastern))
-    scheduler.add_job(scrape_and_save_foods_jp_sync, CronTrigger(day_of_week='sat-sun', hour=17, minute=0, timezone=eastern))
-
-
-    # Start the scheduler
-    scheduler.start()
-    logger.info("Scheduler started")
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
