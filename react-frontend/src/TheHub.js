@@ -6,9 +6,10 @@ import './TheHub.css'; // Make sure you create this CSS file
 function TheHub() {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/foods')
+    axios.get(`${apiUrl}/api/foods`)
       .then(response => {
         setFoods(response.data.foods);
         setLoading(false);
@@ -32,7 +33,7 @@ function TheHub() {
   }, {});
 
   const scrape = () => {
-    axios.post('http://127.0.0.1:8000/api/scrape', {})
+    axios.post(`${apiUrl}/api/scrape`, {})
       .then(response => {
         console.log('Scraping initiated successfully:', response.data);
       })

@@ -6,9 +6,10 @@ import './Jp.css'; // Make sure you create this CSS file
 function Jp() {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/foodsJP')
+    axios.get(`${apiUrl}/api/foodsJP`)
       .then(response => {
         setFoods(response.data.foods);
         setLoading(false);
@@ -32,7 +33,7 @@ function Jp() {
   }, {});
 
   const scrape = () => {
-    axios.post('http://127.0.0.1:8000/api/scrapeJP', {})
+    axios.post(`${apiUrl}/api/scrapeJP`, {})
       .then(response => {
         console.log('Scraping initiated successfully:', response.data);
       })
