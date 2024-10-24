@@ -18,7 +18,7 @@ function Jp() {
         console.error('Error fetching the foods:', error);
         setLoading(false);
       });
-  }, []);
+  }, [apiUrl]);
 
   if (loading) {
     return <div>Loading...</div>;
